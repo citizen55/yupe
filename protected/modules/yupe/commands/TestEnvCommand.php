@@ -17,11 +17,11 @@
 class TestEnvCommand extends CConsoleCommand
 {
     const COMMAND_DIR = __DIR__;
-    const ROOT_DIR = "/../..";
-    const CONFIG_DIR = "/../config";
-    const TESTS_DIR = "/../../tests";
+    const ROOT_DIR = "/../../../..";
+    const CONFIG_DIR = "/../../../config";
+    const TESTS_DIR = "/../../../../tests";
 
-    public $dbOptions = ['dbname' => 'yupe_test', 'dbuser' => 'root', 'dbpass' => ''];
+    public $dbOptions = ['dbname' => 'new', 'dbuser' => 'root', 'dbpass' => 's'];
 
     public function actionIndex()
     {
