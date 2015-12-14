@@ -18,14 +18,38 @@
  */
 class Attribute extends \yupe\models\YModel
 {
+    /**
+     *
+     */
     const TYPE_TEXT = 0;
+    /**
+     *
+     */
     const TYPE_SHORT_TEXT = 1;
+    /**
+     *
+     */
     const TYPE_DROPDOWN = 2;
+    /**
+     *
+     */
     const TYPE_CHECKBOX = 3;
+    /**
+     *
+     */
     const TYPE_CHECKBOX_LIST = 4;
+    /**
+     *
+     */
     const TYPE_IMAGE = 5;
+    /**
+     *
+     */
     const TYPE_NUMBER = 6;
 
+    /**
+     * @var
+     */
     public $rawOptions;
 
     /**
@@ -36,6 +60,10 @@ class Attribute extends \yupe\models\YModel
         return '{{store_attribute}}';
     }
 
+    /**
+     * @param null|string $className
+     * @return $this
+     */
     public static function model($className = __CLASS__)
     {
         return parent::model($className);
@@ -67,11 +95,15 @@ class Attribute extends \yupe\models\YModel
     }
 
 
+    /**
+     * @return array
+     */
     public function relations()
     {
         return [
             'options' => [self::HAS_MANY, 'AttributeOption', 'attribute_id', 'order' => 'options.position ASC'],
             'group' => [self::BELONGS_TO, 'AttributeGroup', 'group_id'],
+            'value' => [self::BELONGS_TO, 'AttributeValue', 'attribute_id']
         ];
     }
 
@@ -139,6 +171,9 @@ class Attribute extends \yupe\models\YModel
         );
     }
 
+    /**
+     * @return array
+     */
     public static function getTypesList()
     {
         return [
@@ -152,82 +187,15 @@ class Attribute extends \yupe\models\YModel
         ];
     }
 
+    /**
+     * @param $type
+     * @return mixed
+     */
     public static function getTypeTitle($type)
     {
         $list = self::getTypesList();
 
         return $list[$type];
-    }
-
-    public function renderField($value = null, $name = null, $htmlOptions = [])
-    {
-        $name = $name ?: 'Attribute[' . $this->name . ']';
-        switch ($this->type) {
-            case self::TYPE_SHORT_TEXT:
-                return CHtml::textField($name, $value, $htmlOptions);
-                break;
-            case self::TYPE_TEXT:
-                return Yii::app()->getController()->widget(
-                    Yii::app()->getModule('store')->getVisualEditor(),
-                    [
-                        'name' => $name,
-                        'value' => $value
-                    ],
-                    true
-                );
-                break;
-            case self::TYPE_DROPDOWN:
-                $data = CHtml::listData($this->options, 'id', 'value');
-                return CHtml::dropDownList($name, $value, $data, array_merge($htmlOptions, ($this->required ? [] : ['empty' => '---'])));
-                break;
-            case self::TYPE_CHECKBOX_LIST:
-                $data = CHtml::listData($this->options, 'id', 'value');
-                return CHtml::checkBoxList($name . '[]', $value, $data, $htmlOptions);
-                break;
-            case self::TYPE_CHECKBOX:
-                return CHtml::checkBox($name, $value, CMap::mergeArray(['uncheckValue' => 0], $htmlOptions));
-                break;
-            case self::TYPE_NUMBER:
-                return CHtml::numberField($name, $value, $htmlOptions);
-                break;
-            case self::TYPE_IMAGE:
-                return CHtml::fileField($name, null, $htmlOptions);
-                break;
-        }
-
-        return null;
-    }
-
-    public function renderValue($value)
-    {
-        $unit = $this->unit ? ' ' . $this->unit : '';
-        $res = '';
-        switch ($this->type) {
-            case self::TYPE_TEXT:
-            case self::TYPE_SHORT_TEXT:
-            case self::TYPE_NUMBER:
-                $res = $value;
-                break;
-            case self::TYPE_DROPDOWN:
-                $data = CHtml::listData($this->options, 'id', 'value');
-                if (!is_array($value) && isset($data[$value])) {
-                    $res = $data[$value];
-                }
-                break;
-            case self::TYPE_CHECKBOX:
-                $res = $value ? Yii::t("StoreModule.store", "Yes") : Yii::t("StoreModule.store", "No");
-                break;
-        }
-
-        return $res . $unit;
-    }
-
-    public function afterDelete()
-    {
-        /* удаляем привязанные к товару атрибуты */
-        $this->getDbConnection()->createCommand("DELETE FROM {{store_product_attribute_eav}} WHERE `attribute`='{$this->name}'")->execute();
-
-        parent::afterDelete();
     }
 
     /**
@@ -238,18 +206,26 @@ class Attribute extends \yupe\models\YModel
         return [self::TYPE_DROPDOWN, self::TYPE_CHECKBOX_LIST];
     }
 
+    /**
+     * @param $name
+     * @return null|static
+     */
     public function getAttributeByName($name)
     {
         return $name ? self::model()->findByAttributes(['name' => $name]) : null;
     }
 
+    /**
+     * @return string
+     */
     public function getGroupTitle()
     {
         return $this->group instanceof AttributeGroup ? $this->group->name : '---';
     }
 
-
-
+    /**
+     * @throws CDbException
+     */
     public function afterSave()
     {
         if ($this->type == Attribute::TYPE_DROPDOWN) {
@@ -298,13 +274,75 @@ class Attribute extends \yupe\models\YModel
         parent::afterSave();
     }
 
+    /**
+     * @param $type
+     * @return bool
+     */
     public function isType($type)
     {
         return $type == $this->type;
     }
 
+    /**
+     * @return bool
+     */
     public function isRequired()
     {
         return $this->required;
+    }
+
+
+    /**
+     * @return string Список опций, разделенных переносом строки
+     */
+    public function getRawOptions()
+    {
+        $tmp = '';
+        foreach ((array)$this->options as $option) {
+            $tmp .= $option->value . "\n";
+        }
+        return $tmp;
+    }
+
+    /**
+     * @param $currentType
+     * @param $newType
+     * @return bool
+     */
+    public function changeType($currentType, $newType)
+    {
+        if ($currentType == $newType) {
+            return true;
+        }
+
+        $value = new AttributeValue();
+
+        $currentCol = $value->column($currentType);
+        $newCol = $value->column($newType);
+
+        if ($currentCol == $newCol) {
+            return true;
+        }
+
+        $transaction = Yii::app()->getDb()->beginTransaction();
+
+        try {
+
+            Yii::app()->getDb()
+                ->createCommand(sprintf('UPDATE {{store_product_attribute_value}} SET %s = %s WHERE attribute_id = :id', $newCol, $currentCol))
+                ->bindValue(':id', $this->id)
+                ->execute();
+
+            Yii::app()->getDb()
+                ->createCommand(sprintf('UPDATE {{store_product_attribute_value}} SET %s = null WHERE attribute_id = :id', $currentCol))
+                ->bindValue(':id', $this->id)
+                ->execute();
+
+            $transaction->commit();
+            return true;
+        } catch (Exception $e) {
+            $transaction->rollback();
+            return false;
+        }
     }
 }

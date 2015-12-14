@@ -4,6 +4,7 @@ namespace yupe\components\behaviors;
 
 use Yii;
 use yupe\components\image\Imagine;
+use Imagine\Image\ImageInterface;
 use yupe\helpers\YFile;
 
 class ImageUploadBehavior extends FileUploadBehavior
@@ -94,7 +95,7 @@ class ImageUploadBehavior extends FileUploadBehavior
     public function getImageUrl(
         $width = 0,
         $height = 0,
-        array $options = ['jpeg_quality' => 90, 'png_compression_level' => 8]
+        $crop = true
     ) {
         $file = $this->getFilePath();
         $defaultImagePath = Yii::getPathOfAlias('webroot') . $this->defaultImage;
@@ -115,7 +116,7 @@ class ImageUploadBehavior extends FileUploadBehavior
                 $this->uploadPath,
                 $width,
                 $height,
-                $options
+                $crop
             );
 
         }

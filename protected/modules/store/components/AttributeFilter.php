@@ -3,7 +3,7 @@
 /**
  * Class AttributeFilter
  */
-class AttributeFilter extends CComponent
+class AttributeFilter extends CApplicationComponent
 {
     /**
      *
@@ -15,6 +15,8 @@ class AttributeFilter extends CComponent
     const MAIN_SEARCH_PARAM_CATEGORY = 'category';
 
     const MAIN_SEARCH_PARAM_NAME = 'name';
+
+    const MAIN_SEARCH_PARAM_PRICE = 'price';
 
     /**
      * @var string
@@ -35,14 +37,6 @@ class AttributeFilter extends CComponent
     public $stringTemplate = '%s';
 
     /**
-     *
-     */
-    public function init()
-    {
-
-    }
-
-    /**
      * @param $paramName
      * @param $value
      * @param CHttpRequest $request
@@ -55,6 +49,25 @@ class AttributeFilter extends CComponent
         return !empty($data) && in_array($value, $data);
     }
 
+    public function getMainSearchParamsValue($name, $suffix = null, CHttpRequest $request)
+    {
+        $data = $request->getQuery($name);
+
+        if (empty($data)) {
+            return null;
+        }
+
+        if (null === $suffix && !is_array($data)) {
+            return $data;
+        }
+
+        if (is_array($data) && null !== $suffix) {
+            return isset($data[$suffix]) ? $data[$suffix] : null;
+        }
+
+        return null;
+    }
+
     /**
      * @return array
      */
@@ -62,7 +75,8 @@ class AttributeFilter extends CComponent
     {
         return [
             self::MAIN_SEARCH_PARAM_CATEGORY => 'category_id',
-            self::MAIN_SEARCH_PARAM_PRODUCER => 'producer_id'
+            self::MAIN_SEARCH_PARAM_PRODUCER => 'producer_id',
+            self::MAIN_SEARCH_PARAM_PRICE => 'price'
         ];
     }
 
@@ -97,7 +111,7 @@ class AttributeFilter extends CComponent
      */
     public function getFieldValue(Attribute $attribute, $mode = null)
     {
-        if(null !== $mode) {
+        if (null !== $mode) {
             $data = Yii::app()->getRequest()->getParam($attribute->name);
             return is_array($data) && array_key_exists($mode, $data) ? $data[$mode] : null;
         }
@@ -153,6 +167,14 @@ class AttributeFilter extends CComponent
         foreach ($this->getMainSearchParams() as $param => $field) {
             if ($request->getQuery($param)) {
                 $result[$param] = $request->getQuery($param);
+                if (is_array($result[$param])) {
+                    if (isset($result[$param]['to']) && null == $result[$param]['to']) {
+                        unset($result[$param]['to']);
+                    }
+                    if (isset($result[$param]['from']) && null == $result[$param]['from']) {
+                        unset($result[$param]['from']);
+                    }
+                }
             }
         }
 
@@ -168,42 +190,55 @@ class AttributeFilter extends CComponent
      * @param CHttpRequest $request
      * @return array
      */
-    public function getEavAttributesForSearchFromQuery(CHttpRequest $request)
+    public function getTypeAttributesForSearchFromQuery(CHttpRequest $request)
     {
-        $result = $params = [];
+        $attributes = Yii::app()->getCache()->get('Store::filter::attributes');
 
-        $attributes = Attribute::model()->cache(Yii::app()->getModule('yupe')->coreCacheTime)->findAll(
-            ['select' => ['name']]
-        );
+        if (false === $attributes) {
 
-        foreach ($attributes as $attribute) {
+            $attributes = [];
 
-            if ($request->getQuery($attribute->name)) {
+            $models = Attribute::model()->findAll(
+                ['select' => ['name', 'id', 'type']]
+            );
 
-                $searchParams = $request->getQuery($attribute->name);
-
-                if (!is_array($searchParams)) {
-                    $result[$attribute->name] = $searchParams;
-                    continue;
-                }
-
-                $isFrom = array_key_exists('from', $searchParams);
-                $isTo = array_key_exists('to', $searchParams);
-
-                if (false === $isFrom && false === $isTo) {
-                    $result[$attribute->name] = $searchParams;
-                    continue;
-                }
-
-                if (true === $isFrom && !empty($searchParams['from'])) {
-                    $result[] = ['>=', $attribute->name, (float)$searchParams['from']];
-                }
-
-                if (true === $isTo && !empty($searchParams['to'])) {
-                    $result[] = ['<=', $attribute->name, (float)$searchParams['to']];
-                }
-
+            foreach ($models as $model) {
+                $attributes[$model->name] = $model;
             }
+
+            Yii::app()->getCache()->set('Store::filter::attributes', $attributes);
+        }
+
+        $result = [];
+
+        $attributeValue = new AttributeValue();
+
+        foreach ($attributes as $name => $attribute) {
+
+            $searchParams = $request->getQuery($attribute->name);
+
+            //пропускаем пустые значения
+            if (null === $searchParams) {
+                continue;
+            }
+
+            if (is_array($searchParams)) {
+                if (isset($searchParams['from']) && null == $searchParams['from']) {
+                    unset($searchParams['from']);
+                }
+                if (isset($searchParams['to']) && null == $searchParams['to']) {
+                    unset($searchParams['to']);
+                }
+                if (empty($searchParams)) {
+                    continue;
+                }
+            }
+
+            $result[$attribute->name] = [
+                'value' => $searchParams,
+                'attribute_id' => (int)$attribute->id,
+                'column' => $attributeValue->column($attribute->type)
+            ];
         }
 
         return $result;

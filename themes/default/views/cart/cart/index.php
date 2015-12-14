@@ -11,7 +11,7 @@ Yii::app()->getClientScript()->registerCssFile($mainAssets . '/css/cart-frontend
 
 $this->title = Yii::t('CartModule.cart', 'Cart');
 $this->breadcrumbs = [
-    Yii::t("CartModule.cart", 'Catalog') => ['/store/catalog/index'],
+    Yii::t("CartModule.cart", 'Catalog') => ['/store/product/index'],
     Yii::t("CartModule.cart", 'Cart')
 ];
 ?>
@@ -21,10 +21,11 @@ $this->breadcrumbs = [
     var yupeCartDeleteProductUrl = '<?= Yii::app()->createUrl('/cart/cart/delete/')?>';
     var yupeCartUpdateUrl = '<?= Yii::app()->createUrl('/cart/cart/update/')?>';
     var yupeCartWidgetUrl = '<?= Yii::app()->createUrl('/cart/cart/widget/')?>';
+    var yupeCartEmptyMessage = '<h1><?= Yii::t("CartModule.cart", "Cart is empty"); ?></h1><?= Yii::t("CartModule.cart", "There are no products in cart"); ?>';
 </script>
 
 <div class="row">
-    <div class="col-sm-12">
+    <div id="cart-body" class="col-sm-12">
         <?php if (Yii::app()->cart->isEmpty()): ?>
             <h1><?= Yii::t("CartModule.cart", "Cart is empty"); ?></h1>
             <?= Yii::t("CartModule.cart", "There are no products in cart"); ?>
@@ -63,14 +64,14 @@ $this->breadcrumbs = [
                 </thead>
                 <tbody>
                     <?php foreach ($positions as $position): ?>
-                        <tr>
+                        <tr class="cart-position">
                             <td class="col-sm-5">
                                 <?php $positionId = $position->getId(); ?>
                                 <?= CHtml::hiddenField('OrderProduct[' . $positionId . '][product_id]', $position->id); ?>
                                 <input type="hidden" class="position-id" value="<?= $positionId; ?>"/>
 
                                 <div class="media">
-                                    <?php $productUrl = Yii::app()->createUrl('store/catalog/show', ['name' => $position->slug]); ?>
+                                    <?php $productUrl = Yii::app()->createUrl('/store/product/view', ['name' => $position->slug]); ?>
                                     <a class="img-thumbnail pull-left" href="<?= $productUrl; ?>">
                                         <img class="media-object" src="<?= $position->getProductModel()->getImageUrl(72, 72); ?>">
                                     </a>
@@ -287,9 +288,54 @@ $this->breadcrumbs = [
                                     <tr>
                                         <td>
                                             <div>
-                                                <?= $form->labelEx($order, 'address'); ?>
-                                                <?= $form->textField($order, 'address', ['class' => 'form-control']); ?>
-                                                <?= $form->error($order, 'address'); ?>
+                                                <?= $form->labelEx($order, 'zipcode'); ?>
+                                                <?= $form->textField($order, 'zipcode', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'zipcode'); ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <?= $form->labelEx($order, 'country'); ?>
+                                                <?= $form->textField($order, 'country', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'country'); ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <?= $form->labelEx($order, 'city'); ?>
+                                                <?= $form->textField($order, 'city', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'city'); ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <?= $form->labelEx($order, 'street'); ?>
+                                                <?= $form->textField($order, 'street', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'street'); ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <?= $form->labelEx($order, 'house'); ?>
+                                                <?= $form->textField($order, 'house', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'house'); ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <?= $form->labelEx($order, 'apartment'); ?>
+                                                <?= $form->textField($order, 'apartment', ['class' => 'form-control']); ?>
+                                                <?= $form->error($order, 'apartment'); ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -306,7 +352,7 @@ $this->breadcrumbs = [
                     </tr>
                     <tr>
                         <td colspan="5" style="text-align: right;">
-                            <a href="<?= Yii::app()->createUrl('store/catalog/index'); ?>" class="btn btn-default">
+                            <a href="<?= Yii::app()->createUrl('store/product/index'); ?>" class="btn btn-default">
                                 <span class="glyphicon glyphicon-shopping-cart"></span>
                                 <?= Yii::t("CartModule.cart", "Back to catalog"); ?>
                             </a>

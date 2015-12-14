@@ -25,7 +25,7 @@ class YupeModule extends WebModule
     /**
      *
      */
-    const VERSION = '0.9.7-dev';
+    const VERSION = '0.9.9';
 
     /**
      * @var
@@ -210,7 +210,7 @@ class YupeModule extends WebModule
             ];
         }
 
-        if (Yii::app()->db->enableProfiling) {
+        if (Yii::app()->getDb()->enableProfiling) {
             $messages[WebModule::CHECK_ERROR][] = [
                 'type'    => WebModule::CHECK_ERROR,
                 'message' => Yii::t(
@@ -220,7 +220,7 @@ class YupeModule extends WebModule
             ];
         }
 
-        if (Yii::app()->db->enableParamLogging) {
+        if (Yii::app()->getDb()->enableParamLogging) {
             $messages[WebModule::CHECK_ERROR][] = [
                 'type'    => WebModule::CHECK_ERROR,
                 'message' => Yii::t(
@@ -259,7 +259,7 @@ class YupeModule extends WebModule
             ];
         }
 
-        if (!is_writable(Yii::app()->runtimePath)) {
+        if (!is_writable(Yii::app()->getRuntimePath())) {
             $messages[WebModule::CHECK_ERROR][] = [
                 'type'    => WebModule::CHECK_ERROR,
                 'message' => Yii::t(
@@ -291,7 +291,7 @@ class YupeModule extends WebModule
             ];
         }
 
-        if (!Yii::app()->db->schemaCachingDuration) {
+        if (!Yii::app()->getDb()->schemaCachingDuration) {
             $messages[WebModule::CHECK_ERROR][] = [
                 'type'    => WebModule::CHECK_ERROR,
                 'message' => Yii::t(
@@ -375,15 +375,6 @@ class YupeModule extends WebModule
     public function getEditableParamsGroups()
     {
         return [
-            'main'     => [
-                'label' => Yii::t('YupeModule.yupe', 'Main settings admin panel'),
-                'items' => [
-                    'hidePanelUrls',
-                    'allowedIp',
-                    'email',
-                    'coreCacheTime'
-                ]
-            ],
             'site'     => [
                 'label' => Yii::t('YupeModule.yupe', 'Site settings'),
                 'items' => [
@@ -416,6 +407,15 @@ class YupeModule extends WebModule
                     'allowedExtensions',
                     'mimeTypes',
                     'maxSize',
+                ]
+            ],
+            'main'     => [
+                'label' => Yii::t('YupeModule.yupe', 'Main settings admin panel'),
+                'items' => [
+                    'hidePanelUrls',
+                    'allowedIp',
+                    'email',
+                    'coreCacheTime'
                 ]
             ],
         ];
@@ -619,7 +619,7 @@ class YupeModule extends WebModule
      **/
     public function getUrl()
     {
-        return Yii::t('YupeModule.yupe', 'http://yupe.ru');
+        return Yii::t('YupeModule.yupe', 'http://yupe-project.ru');
     }
 
     /**
@@ -816,7 +816,10 @@ class YupeModule extends WebModule
                 ['alt' => CHtml::encode($text)]
             ),
             'http://yupe-project.ru?from=pb',
-            ['title' => CHtml::encode($text)]
+            [
+                'title' => CHtml::encode($text),
+                'target'=> '_blank'
+            ]
         );
     }
 

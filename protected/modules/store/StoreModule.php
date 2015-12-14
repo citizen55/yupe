@@ -2,30 +2,74 @@
 
 use yupe\components\WebModule;
 
+/**
+ * Class StoreModule
+ */
 class StoreModule extends WebModule
 {
-    const VERSION = '0.9.7';
+    /**
+     *
+     */
+    const VERSION = '0.9.9';
 
+    /**
+     * @var
+     */
+    public $phone;
+
+    /**
+     * @var
+     */
+    public $email;
+
+    public $currency = 'RUB';
+
+    /**
+     * @var string
+     */
     public $uploadPath = 'store';
+    /**
+     * @var string
+     */
     public $allowedExtensions = 'jpg,jpeg,png,gif';
+    /**
+     * @var int
+     */
     public $minSize = 0;
+    /**
+     * @var
+     */
     public $maxSize;
+    /**
+     * @var int
+     */
     public $maxFiles = 1;
+    /**
+     * @var string
+     */
     public $assetsPath = 'application.modules.store.views.assets';
+    /**
+     * @var string
+     */
     public $defaultImage = '/images/nophoto.jpg';
+    /**
+     * @var int
+     */
+    public $itemsPerPage = 20;
 
-    public function getDependencies()
-    {
-        return ['comment'];
-    }
-
+    /**
+     * @return string
+     */
     public function getUploadPath()
     {
-        return Yii::getPathOfAlias('webroot') . '/' . Yii::app()->getModule(
+        return Yii::getPathOfAlias('webroot').'/'.Yii::app()->getModule(
             'yupe'
-        )->uploadPath . '/' . $this->uploadPath;
+        )->uploadPath.'/'.$this->uploadPath;
     }
 
+    /**
+     * @return array|bool
+     */
     public function checkSelf()
     {
         $messages = [];
@@ -33,6 +77,9 @@ class StoreModule extends WebModule
         return isset($messages[WebModule::CHECK_ERROR]) ? $messages : true;
     }
 
+    /**
+     * @return bool
+     */
     public function getInstall()
     {
         if (parent::getInstall()) {
@@ -42,55 +89,106 @@ class StoreModule extends WebModule
         return true;
     }
 
+    public function getCurrencyList()
+    {
+        return [
+            'USD' => 'USD',
+            'RUB' => 'RUB',
+            'EUR' => 'EUR'
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
     public function getEditableParams()
     {
         return [
             'uploadPath',
-            'editor' => Yii::app()->getModule('yupe')->editors
+            'editor' => Yii::app()->getModule('yupe')->editors,
+            'itemsPerPage',
+            'phone',
+            'email',
+            'currency' => $this->getCurrencyList()
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getParamsLabels()
     {
         return [
             'uploadPath' => Yii::t(
-                    'StoreModule.store',
-                    'File uploads directory (relative to "{path}")', ['{path}' => Yii::getPathOfAlias('webroot').'/'.Yii::app()->getModule("yupe")->uploadPath]
-                ),
+                'StoreModule.store',
+                'File uploads directory (relative to "{path}")',
+                ['{path}' => Yii::getPathOfAlias('webroot').'/'.Yii::app()->getModule("yupe")->uploadPath]
+            ),
             'editor' => Yii::t('StoreModule.store', 'Visual editor'),
-            'defaultImage' => Yii::t('StoreModule.store', 'Default image')
+            'defaultImage' => Yii::t('StoreModule.store', 'Default image'),
+            'itemsPerPage' => Yii::t('StoreModule.store', 'Items per page'),
+            'phone' => Yii::t('StoreModule.store', 'Phone'),
+            'email' => Yii::t('StoreModule.store', 'Email'),
+            'currency' => Yii::t('StoreModule.store', 'Currency')
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getEditableParamsGroups()
     {
         return [
-            '0.main' => [
+            '0.store' => [
+                'label' => Yii::t('StoreModule.store', 'Store'),
+                'items' => [
+                    'phone',
+                    'email',
+                    'itemsPerPage'
+                ],
+            ],
+            '1.store' => [
+                'label' => Yii::t('StoreModule.store', 'Currency'),
+                'items' => [
+                    'currency'
+                ],
+            ],
+            '2.main' => [
                 'label' => Yii::t('StoreModule.store', 'Images'),
                 'items' => [
                     'uploadPath',
-                    'defaultImage'
-                ]
+                    'defaultImage',
+                ],
             ],
-            '1.main' => [
+            '3.main' => [
                 'label' => Yii::t('StoreModule.store', 'Visual editor settings'),
                 'items' => [
-                    'editor'
-                ]
+                    'editor',
+                ],
             ],
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function getNavigation()
     {
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function getIsShowInAdminMenu()
     {
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getExtendedNavigation()
     {
         return [
@@ -99,24 +197,24 @@ class StoreModule extends WebModule
                 'label' => Yii::t('StoreModule.store', 'Catalog'),
                 'items' => [
                     [
-                        'icon' => 'fa fa-fw fa-shopping-cart',
+                        'icon' => 'fa fa-fw fa-reorder',
                         'label' => Yii::t('StoreModule.store', 'Products'),
                         'url' => ['/store/productBackend/index'],
                         'items' => [
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
                                 'label' => Yii::t('StoreModule.store', 'Product list'),
-                                'url' => ['/store/productBackend/index']
+                                'url' => ['/store/productBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
                                 'label' => Yii::t('StoreModule.store', 'Create product'),
-                                'url' => ['/store/productBackend/create']
+                                'url' => ['/store/productBackend/create'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-link',
                                 'label' => Yii::t('StoreModule.store', 'Link types'),
-                                'url' => ['/store/linkBackend/typeIndex']
+                                'url' => ['/store/linkBackend/typeIndex'],
                             ],
                         ],
                     ],
@@ -128,12 +226,12 @@ class StoreModule extends WebModule
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
                                 'label' => Yii::t('StoreModule.type', 'Types list'),
-                                'url' => ['/store/typeBackend/index']
+                                'url' => ['/store/typeBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
                                 'label' => Yii::t('StoreModule.type', 'Create type'),
-                                'url' => ['/store/typeBackend/create']
+                                'url' => ['/store/typeBackend/create'],
                             ],
                         ],
                     ],
@@ -145,12 +243,12 @@ class StoreModule extends WebModule
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
                                 'label' => Yii::t('StoreModule.attr', 'Attributes list'),
-                                'url' => ['/store/attributeBackend/index']
+                                'url' => ['/store/attributeBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
                                 'label' => Yii::t('StoreModule.attr', 'Create attribute'),
-                                'url' => ['/store/attributeBackend/create']
+                                'url' => ['/store/attributeBackend/create'],
                             ],
                         ],
                     ],
@@ -162,12 +260,12 @@ class StoreModule extends WebModule
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
                                 'label' => Yii::t('StoreModule.category', 'Categories list'),
-                                'url' => ['/store/categoryBackend/index']
+                                'url' => ['/store/categoryBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
                                 'label' => Yii::t('StoreModule.category', 'Create category'),
-                                'url' => ['/store/categoryBackend/create']
+                                'url' => ['/store/categoryBackend/create'],
                             ],
                         ],
                     ],
@@ -179,12 +277,12 @@ class StoreModule extends WebModule
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
                                 'label' => Yii::t('StoreModule.producer', 'Producers list'),
-                                'url' => ['/store/producerBackend/index']
+                                'url' => ['/store/producerBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
                                 'label' => Yii::t('StoreModule.producer', 'Create producer'),
-                                'url' => ['/store/producerBackend/create']
+                                'url' => ['/store/producerBackend/create'],
                             ],
                         ],
                     ],
@@ -193,51 +291,81 @@ class StoreModule extends WebModule
         ];
     }
 
+    /**
+     * @return string
+     */
     public function getAdminPageLink()
     {
         return '/store/storeBackend/index';
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return self::VERSION;
     }
 
+    /**
+     * @return string
+     */
     public function getCategory()
     {
         return Yii::t('StoreModule.store', 'Store');
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return Yii::t('StoreModule.store', 'Store');
     }
 
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return Yii::t('StoreModule.store', 'Store module');
     }
 
+    /**
+     * @return string
+     */
     public function getAuthor()
     {
         return Yii::t('StoreModule.store', 'amylabs team');
     }
 
+    /**
+     * @return string
+     */
     public function getAuthorEmail()
     {
         return Yii::t('StoreModule.store', 'hello@amylabs.ru');
     }
 
+    /**
+     * @return string
+     */
     public function getUrl()
     {
-        return 'http://amylabs.ru';
+        return 'http://yupe-project.ru';
     }
 
+    /**
+     * @return string
+     */
     public function getIcon()
     {
         return 'fa fa-fw fa-shopping-cart';
     }
 
+    /**
+     *
+     */
     public function init()
     {
         parent::init();
@@ -251,6 +379,9 @@ class StoreModule extends WebModule
         );
     }
 
+    /**
+     * @return array
+     */
     public function getAuthItems()
     {
         return [

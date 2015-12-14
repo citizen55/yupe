@@ -1,9 +1,9 @@
-<?php $productUrl = Yii::app()->createUrl('/store/catalog/show', ['name' => CHtml::encode($data->slug)]); ?>
+<?php $productUrl = Yii::app()->createUrl('/store/product/view', ['name' => CHtml::encode($data->slug)]); ?>
 <div class="col-sm-4">
     <div class="col-item">
         <div class="photo">
             <a href="<?= $productUrl; ?>">
-                <img src="<?= $data->getImageUrl(190, 190); ?>"/>
+                <img src="<?= $data->getImageUrl(190, 190, false); ?>"/>
             </a>
         </div>
         <div class="info separator">
