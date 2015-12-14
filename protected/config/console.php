@@ -1,6 +1,7 @@
 <?php
 Yii::setPathOfAlias('application', __DIR__ . '/../');
 Yii::setPathOfAlias('yupe', __DIR__ . '/../modules/yupe/');
+//Yii::setPathOfAlias('multistore', __DIR__ . '/../modules/multistore/');
 Yii::setPathOfAlias('vendor', __DIR__ . '/../../vendor/');
 Yii::setPathOfAlias('themes', __DIR__ . '/../../themes/');
 
@@ -13,8 +14,10 @@ return [
         'migrate' => [
             'class' => 'vendor.yiiext.migrate-command.EMigrateCommand',
             'migrationPath' => 'application.modules.yupe.install.migrations',
+			//'migrationPath' => 'application.modules.multistore.install.migrations',
             'migrationTable' => '{{migrations}}',
             'applicationModuleName' => 'yupe',
+			//'applicationModuleName' => 'multistore',
             'migrationSubPath' => 'install.migrations',
             'connectionID'=>'db',
         ],
@@ -76,5 +79,6 @@ return [
         // параметры подключения к базе данных, подробнее http://www.yiiframework.ru/doc/guide/ru/database.overview
         'db' => file_exists(__DIR__ . '/db.php') ? require_once __DIR__ . '/db.php' : []
     ],
-    'modules' => ['yupe' => ['class' => 'application.modules.yupe.YupeModule', 'cache' => true,],]
+    'modules' =>[ 
+		'yupe' => ['class' => 'application.modules.yupe.YupeModule', 'cache' => true,],]
 ];

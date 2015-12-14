@@ -63,7 +63,7 @@ return [
                 'application.modules.yupe.extensions.yupe.gii',
             ),
             'ipFilters'=>array(),
-        ),*/
+        ), */
     ],
     'behaviors' => [
         'onBeginRequest' => [
@@ -103,7 +103,8 @@ return [
             'themeClass' => 'yupe\components\Theme'
         ],
         'cache' => [
-            'class' => 'CFileCache',
+			'class' => 'CDummyCache', // пустое кэширование
+            //'class' => 'CFileCache',
             'behaviors' => ['clear' => ['class' => 'application.modules.yupe.extensions.tagcache.TaggingCacheBehavior']]
         ],
         // конфигурирование urlManager, подробнее: http://www.yiiframework.ru/doc/guide/ru/topics.url
