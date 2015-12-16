@@ -89,6 +89,7 @@ class StoreCategory extends \yupe\models\YModel
                 'maxSize'       => $module->maxSize,
                 'types'         => $module->allowedExtensions,
                 'uploadPath'    => $module !== null ? $module->uploadPath . '/category' : null,
+                'defaultImage' => Yii::app()->getTheme()->getAssetsUrl() . $module->defaultImage,
             ],
             'CategoryTreeBehavior' => [
                 'class'                => 'store\components\behaviors\DCategoryTreeBehavior',
@@ -98,9 +99,8 @@ class StoreCategory extends \yupe\models\YModel
                 'requestPathAttribute' => 'path',
                 'parentAttribute'      => 'parent_id',
                 'parentRelation'       => 'parent',
+                'iconAttribute'        => 'categoryThumb',
                 'defaultCriteria'      => [
-                    'condition' => 'status = :status',
-                    'params'    => [':status' => self::STATUS_PUBLISHED],
                     'order'     => 't.sort'
                 ],
                 'useCache'             => true,
@@ -301,5 +301,10 @@ class StoreCategory extends \yupe\models\YModel
     public function getMetaKeywords()
     {
         return $this->meta_keywords;
+    }
+
+    public function getCategoryThumb()
+    {
+        return $this->getImageUrl(190, 190);
     }
 }

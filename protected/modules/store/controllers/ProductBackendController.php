@@ -1,7 +1,28 @@
 <?php
 
+/**
+ * Class ProductBackendController
+ */
 class ProductBackendController extends yupe\components\controllers\BackController
 {
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     *
+     */
+    public function init()
+    {
+        $this->productRepository = Yii::app()->getComponent('productRepository');
+
+        parent::init();
+    }
+
+    /**
+     * @return array
+     */
     public function actions()
     {
         return [
@@ -25,11 +46,14 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         ];
     }
 
+    /**
+     * @return array
+     */
     public function accessRules()
     {
         return [
             ['allow', 'roles' => ['admin'],],
-            ['allow', 'actions' => ['index', 'ajaxSearch'], 'roles' => ['Store.ProductBackend.Index'],],
+            ['allow', 'actions' => ['index'], 'roles' => ['Store.ProductBackend.Index'],],
             ['allow', 'actions' => ['view'], 'roles' => ['Store.ProductBackend.View'],],
             ['allow', 'actions' => ['create', 'copy'], 'roles' => ['Store.ProductBackend.Create'],],
             [
@@ -135,7 +159,7 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
                 } else {
                     $this->redirect([$_POST['submit-type']]);
                 }
-            }else{
+            } else {
                 Yii::app()->getUser()->setFlash(
                     yupe\widgets\YFlashMessages::ERROR_MESSAGE,
                     Yii::t('StoreModule.store', 'Failed to save product!')
@@ -149,6 +173,9 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         $this->render('update', ['model' => $model, 'searchModel' => $searchModel]);
     }
 
+    /**
+     * @param Product $product
+     */
     public function updateProductImages(Product $product)
     {
         foreach (CUploadedFile::getInstancesByName('ProductImage') as $key => $image) {
@@ -160,6 +187,9 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         }
     }
 
+    /**
+     * @throws CHttpException
+     */
     public function actionDeleteImage()
     {
         if (Yii::app()->getRequest()->getIsPostRequest() && Yii::app()->getRequest()->getIsAjaxRequest()) {
@@ -232,6 +262,11 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         return $model;
     }
 
+    /**
+     * @param $id
+     * @throws CException
+     * @throws CHttpException
+     */
     public function actionTypeAttributesForm($id)
     {
         $type = Type::model()->findByPk($id);
@@ -240,9 +275,13 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
             throw new CHttpException(404);
         }
 
-        $this->renderPartial('_attribute_form', ['type' => $type, 'model' => new Product()]);
+        $this->renderPartial('_attribute_form', ['groups' => $type->getAttributeGroups(), 'model' => new Product()]);
     }
 
+    /**
+     * @param $id
+     * @throws CException
+     */
     public function actionVariantRow($id)
     {
         $variant = new ProductVariant();
@@ -254,6 +293,10 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         $this->renderPartial('_variant_row', ['variant' => $variant]);
     }
 
+    /**
+     * @param $id
+     * @throws CHttpException
+     */
     public function actionTypeAttributes($id)
     {
         $type = Type::model()->findByPk($id);
@@ -263,44 +306,25 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         }
 
         $out = [];
+
         foreach ($type->typeAttributes as $attr) {
-            if ($attr->type === Attribute::TYPE_DROPDOWN) {
+            if ($attr->type == Attribute::TYPE_DROPDOWN) {
                 $out[] = array_merge($attr->attributes, ['options' => $attr->options]);
             } else {
                 if (in_array($attr->type, [Attribute::TYPE_CHECKBOX, Attribute::TYPE_SHORT_TEXT])) {
                     $out[] = array_merge($attr->attributes, ['options' => []]);
+                } else {
+                    $out[] = $attr->attributes;
                 }
             }
         }
-        Yii::app()->ajax->rawText(
-            CJSON::encode($out)
-        );
+
+        Yii::app()->ajax->raw($out);
     }
 
-
-    public function actionAjaxSearch()
-    {
-        if (!Yii::app()->getRequest()->getQuery('q')) {
-            throw new CHttpException(404);
-        }
-
-        $model = Product::model()->searchByName(Yii::app()->getRequest()->getQuery('q'));
-
-        $data = [];
-
-        foreach ($model as $product) {
-            $data[] = [
-                'id' => $product->id,
-                'name' => $product->name . ($product->sku ? " ({$product->sku}) " : ' ') . $product->getPrice(
-                    ) . ' ' . Yii::t('StoreModule.store', 'руб.'),
-                'thumb' => $product->image ? $product->getImageUrl(50, 50) : '',
-            ];
-        }
-
-        Yii::app()->ajax->raw($data);
-
-    }
-
+    /**
+     *
+     */
     public function actionCopy()
     {
         if ($data = Yii::app()->getRequest()->getPost('items')) {

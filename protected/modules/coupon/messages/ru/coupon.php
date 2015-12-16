@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'Create time' => 'Добавлен',
-    'Orders' => 'Заказы',
+    'Coupon already added' => 'Данный купон уже добавлен!',
+    'Error add coupon' => 'При добавлении купона произошла ошибка!',
     '*unknown*' => '*неизвестно*',
     'Active' => 'Активен',
     'Add coupon and close' => 'Добавить купон и закрыть',
@@ -11,7 +11,6 @@ return [
     'Batch delete' => 'Массовое удаление купонов',
     'Clients only' => 'Только для клиентов',
     'Code' => 'Код',
-    'Coupon already added' => 'Купон уже добавлен',
     'Coupon expired' => 'Купон просрочен',
     'Coupon is available only for registered users' => 'Купон доступен только для зарегистрированных пользователей',
     'Coupon not found' => 'Купон не найден',
@@ -29,6 +28,7 @@ return [
     'Coupons list' => 'Список купонов',
     'Coupons' => 'Купоны',
     'Create coupon' => 'Добавить купон',
+    'Create time' => 'Добавлен',
     'Creating' => 'Добавление',
     'creating' => 'добавление',
     'Delete coupon' => 'Удалить купон',
@@ -44,6 +44,7 @@ return [
     'Min order price' => 'Минимальная сумма заказа',
     'Not active' => 'Неактивен',
     'Order #' => 'Заказ №',
+    'Orders' => 'Заказы',
     'Page not found!' => 'Запрошенная страница не найдена!',
     'Percent' => 'Процент',
     'Purchasing history' => 'История покупок',

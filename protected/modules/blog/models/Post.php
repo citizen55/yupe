@@ -328,7 +328,7 @@ class Post extends yupe\models\YModel implements ICommentable
             'Post', [
                 'criteria' => $criteria,
                 'sort'     => [
-                    'defaultOrder' => 'publish_time DESC',
+                    'defaultOrder' => 't.publish_time DESC, t.id DESC',
                 ]
             ]
         );
@@ -385,7 +385,7 @@ class Post extends yupe\models\YModel implements ICommentable
             ],
             'seo'                => [
                 'class'  => 'vendor.chemezov.yii-seo.behaviors.SeoActiveRecordBehavior',
-                'route'  => '/blog/post/show',
+                'route'  => '/blog/post/view',
                 'params' => [
                     'slug' => function ($data) {
                         return $data->slug;
@@ -803,7 +803,7 @@ class Post extends yupe\models\YModel implements ICommentable
      */
     public function getLink()
     {
-        return Yii::app()->createAbsoluteUrl('/blog/post/show/', ['slug' => $this->slug]);
+        return Yii::app()->createAbsoluteUrl('/blog/post/view/', ['slug' => $this->slug]);
     }
 
     /**

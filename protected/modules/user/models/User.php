@@ -11,6 +11,7 @@
  * @property string  $last_name
  * @property string  $nick_name
  * @property string  $email
+ * @property string  $phone
  * @property integer $gender
  * @property string  $avatar
  * @property string  $hash
@@ -129,9 +130,9 @@ class User extends yupe\models\YModel
                 'match',
                 'pattern' => '/^[A-Za-z0-9_-]{2,50}$/',
                 'message' => Yii::t(
-                        'UserModule.user',
-                        'Bad field format for "{attribute}". You can use only letters and digits from 2 to 20 symbols'
-                    )
+                    'UserModule.user',
+                    'Bad field format for "{attribute}". You can use only letters and digits from 2 to 20 symbols'
+                )
             ],
             ['site', 'url', 'allowEmpty' => true],
             ['email', 'email'],
@@ -153,11 +154,17 @@ class User extends yupe\models\YModel
             ['status', 'in', 'range' => array_keys($this->getStatusList())],
             ['create_time', 'length', 'max' => 50],
             [
-                'id, update_time, create_time, middle_name, first_name, last_name, nick_name, email, gender, avatar, status, access_level, visit_time',
+                'id, update_time, create_time, middle_name, first_name, last_name, nick_name, email, gender, avatar, status, access_level, visit_time, phone',
                 'safe',
                 'on' => 'search'
             ],
             ['birth_date', 'default', 'setOnEmpty' => true, 'value' => null],
+            [
+                'phone',
+                'match',
+                'pattern' => $module->phonePattern,
+                'message' => 'Некорректный формат поля {attribute}'
+            ],
         ];
     }
 
@@ -165,7 +172,7 @@ class User extends yupe\models\YModel
     {
         return [
             'CTimestampBehavior' => [
-                'class'             => 'zii.behaviors.CTimestampBehavior',
+                'class' => 'zii.behaviors.CTimestampBehavior',
                 'setUpdateOnCreate' => true,
             ],
         ];
@@ -215,6 +222,7 @@ class User extends yupe\models\YModel
             'site' => Yii::t('UserModule.user', 'Site/blog'),
             'location' => Yii::t('UserModule.user', 'Location'),
             'about' => Yii::t('UserModule.user', 'About yourself'),
+            'phone' => Yii::t('UserModule.user', 'Phone'),
         ];
     }
 
@@ -259,6 +267,7 @@ class User extends yupe\models\YModel
         $criteria->compare('t.last_name', $this->last_name, true);
         $criteria->compare('t.nick_name', $this->nick_name, true);
         $criteria->compare('t.email', $this->email, true);
+        $criteria->compare('t.phone', $this->phone, true);
         $criteria->compare('t.gender', $this->gender);
         $criteria->compare('t.status', $this->status);
         $criteria->compare('t.access_level', $this->access_level);
@@ -293,7 +302,6 @@ class User extends yupe\models\YModel
 
         parent::afterFind();
     }
-
 
     /**
      * Метод выполняемый перед сохранением:
@@ -523,6 +531,24 @@ class User extends yupe\models\YModel
             $size,
             $size
         );
+    }
+
+    /**
+     * Получаем список пользователей с полным имем:
+     *
+     * @param string $separator - разделитель
+     *
+     * @return string
+     */
+    public static function getFullNameList($separator = ' ')
+    {
+        $list = [];
+
+        foreach (User::model()->cache(Yii::app()->getModule('yupe')->coreCacheTime)->findAll() as $user) {
+            $list[$user->id] = $user->getFullName($separator);
+        }
+
+        return $list;
     }
 
     /**

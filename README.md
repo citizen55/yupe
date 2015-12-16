@@ -15,13 +15,12 @@
 Юпи! позволяет быстро и легко создавать проекты следующих типов:
 
 * [интернет-магазины](http://yupe-project.ru/ecommerce)
-* каталоги товаров
 * сайты-визитки
 * корпоративные порталы
-* блоги / сообщества
+* [блоги / сообщества](http://yupe-project.ru/community)
 
 
-На Юпи! работает более 1000 проектов, Юпи! активно используют [студии и команды разработчиков](http://yupe-project.ru/partners).
+На Юпи! работает более 1500 проектов, среди которых около 300 интернет-магазинов, Юпи! активно используют [студии и команды разработчиков](http://yupe-project.ru/partners).
 
 Прежде всего Юпи! рассчитан на PHP-разработчиков, знакомых с Yiiframework 1.x.
 
@@ -46,6 +45,7 @@
 * [Чат](http://gitter.im/yupe/yupe)
 * [Блог Юпи!](http://yupe.ru/blogs/yupe-mini-cms-yii)
 * [Репозиторий модулей](https://github.com/yupe/yupe-ext)
+* [Руководство](http://guides-v1.yupe-project.ru/)
 * [Документация](http://yupe.ru/docs/index.html)
 * [API](http://api.yupe.ru/)
 * [Подробнее о проекте](http://yupe-project.ru/about)
@@ -92,6 +92,9 @@
 Сообщество будет благодарно если на сайте будет присутствовать ссылка на [http://yupe-project.ru](http://yupe-project.ru)
 
 
-(c) 2012 - 2015 [amylabs](http://amylabs.ru) && [Yupe! team](http://yupe.ru/)  ![Юпи!](http://yupe.ru/web/images/logo.png)
+[![amylabs](http://yupe-project.ru/web/images/yupe/amylabs.jpg)](http://amylabs.ru)
 
 ![amyLabs](http://amylabs.ru/assets/196fa697/images/logo1.png)
+
+
+(c) 2012 - 2015 [amylabs](http://amylabs.ru) && [Yupe! team](http://yupe.ru/)  ![Юпи!](http://yupe.ru/web/images/logo.png)

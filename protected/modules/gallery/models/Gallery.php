@@ -68,7 +68,7 @@ class Gallery extends yupe\models\YModel
         return [
             'seo' => [
                 'class'  => 'vendor.chemezov.yii-seo.behaviors.SeoActiveRecordBehavior',
-                'route'  => '/gallery/gallery/show',
+                'route'  => '/gallery/gallery/view',
                 'params' => [
                     'id' => function ($data) {
                         return $data->id;
@@ -188,22 +188,6 @@ class Gallery extends yupe\models\YModel
         return $this->imagesCount > 0
             ? $this->images[0]->getImageUrl($width, $height)
             : Yii::app()->getTheme()->getAssetsUrl() . '/images/thumbnail.png';
-    }
-
-    /**
-     * get user list
-     *
-     * @return array of user list
-     **/
-    public function getUsersList()
-    {
-        return CHtml::listData(
-            ($users = User::model()->cache(0, new CDbCacheDependency('SELECT MAX(id) FROM {{user_user}}'))->findAll()),
-            'id',
-            function ($user) {
-                return CHtml::encode($user->fullName);
-            }
-        );
     }
 
     /**
