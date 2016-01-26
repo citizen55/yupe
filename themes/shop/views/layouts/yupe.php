@@ -5,48 +5,28 @@
     <?php
     \yupe\components\TemplateEvent::fire(ShopThemeEvents::HEAD_START);
 
-    Yii::app()->getController()->widget(
-        'vendor.chemezov.yii-seo.widgets.SeoHead',
-        [
-            'httpEquivs' => [
-                'Content-Type' => 'text/html; charset=utf-8',
-                'X-UA-Compatible' => 'IE=edge,chrome=1',
-                'Content-Language' => 'ru-RU',
-                'viewport' => 'width=1200',
-                'imagetoolbar' => 'no',
-                'msthemecompatible' => 'no',
-                'cleartype' => 'on',
-                'HandheldFriendly' => 'True',
-                'format-detection' => 'telephone=no',
-                'format-detection' => 'address=no',
-                'apple-mobile-web-app-capable' => 'yes',
-                'apple-mobile-web-app-status-bar-style' => 'black-translucent',
-            ],
-            'defaultTitle' => $this->yupe->siteName,
-            'defaultDescription' => $this->yupe->siteDescription,
-            'defaultKeywords' => $this->yupe->siteKeyWords,
-        ]
-    );
-
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/styles/slick.css');
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/libs/select2/select2.css');
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/styles/common.css');
     Yii::app()->getClientScript()->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.css');
 
     Yii::app()->getClientScript()->registerCoreScript('jquery');
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/index.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.collapse.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.collapse_storage.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.fancybox.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/overlay.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/product-gallery.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/slick.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/slick.min.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/tabs.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/toggle.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/libs/select2/select2.min.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/store.js', CClientScript::POS_END);
     ?>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Language" content="ru-RU" />
+    <meta http-equiv="viewport" content="width=1200" /><meta http-equiv="imagetoolbar" content="no" />
+    <meta http-equiv="msthemecompatible" content="no" /><meta http-equiv="cleartype" content="on" />
+    <meta http-equiv="HandheldFriendly" content="True" /><meta http-equiv="format-detection" content="address=no" />
+    <meta http-equiv="apple-mobile-web-app-capable" content="yes" />
+    <meta http-equiv="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+    <title><?= $this->pageTitle;?></title>
+    <meta name="description" content="<?= $this->description;?>" />
+    <meta name="keywords" content="<?= $this->keywords;?>" />
+
     <script type="text/javascript">
         var yupeTokenName = '<?= Yii::app()->getRequest()->csrfTokenName;?>';
         var yupeToken = '<?= Yii::app()->getRequest()->getCsrfToken();?>';
@@ -78,7 +58,7 @@
                         <?php endif;?>
                     </div>
                     <div class="navbar__user">
-                        <?php if (Yii::app()->getUser()->isGuest): ?>
+                        <?php if (Yii::app()->getUser()->getIsGuest()): ?>
                             <a href="<?= Yii::app()->createUrl('/user/account/login') ?>" class="btn btn_login-button">
                                 <?= Yii::t('UserModule.user', 'Login'); ?>
                             </a>
@@ -143,9 +123,12 @@
     <div class="main__search grid">
         <div class="search-bar">
             <div class="search-bar__wrapper"><a href="javascript:void(0);" data-toggle="#menu-catalog" class="search-bar__catalog-button">Каталог товаров</a>
-                <?php $this->widget('application.modules.store.widgets.SearchProductWidget', ['query' => Yii::app()->getRequest()->getQuery('SearchForm')['q']]); ?>
+                <?php $this->widget('application.modules.store.widgets.SearchProductWidget'); ?>
             </div>
-            <?php $this->widget('application.modules.store.widgets.CategoryWidget', ['depth' => 2]); ?>
+            <?php if($this->beginCache('store::category::menu', ['duration' => $this->yupe->coreCacheTime])):?>
+                <?php $this->widget('application.modules.store.widgets.CategoryWidget', ['depth' => 2]); ?>
+                <?php $this->endCache();?>
+            <?php endif;?>
         </div>
     </div>
     <div class="main__breadcrumbs grid">
@@ -182,10 +165,14 @@
                         <?php endif; ?>
                     </div>
                     <div class="footer__group">
+                        <?php if($this->beginCache('store::category::footer', ['duration' => $this->yupe->coreCacheTime])):?>
                         <?php $this->widget('application.modules.store.widgets.CategoryWidget', [
                             'depth' => 0,
                             'view' => 'footer'
                         ]); ?>
+
+                            <?php $this->endCache();?>
+                        <?php endif;?>
                     </div>
                     <div class="footer__group">
                         <div class="footer__item footer__item_header">Контакты</div>
@@ -205,5 +192,19 @@
 </div>
 <?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::BODY_END);?>
 <div class='notifications top-right' id="notifications"></div>
+<?php
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/index.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.collapse.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.collapse_storage.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/overlay.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/product-gallery.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/slick.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/slick.min.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/tabs.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/toggle.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/libs/select2/select2.min.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/store.js', CClientScript::POS_END);
+?>
 </body>
 </html>

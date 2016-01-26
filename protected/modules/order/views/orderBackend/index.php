@@ -73,7 +73,7 @@ $this->widget(
                 'name' => 'name',
                 'type' => 'raw',
                 'value' => function($data){
-                    return isset($data->client) ? CHtml::link($data->client->getFullName(), ['/order/orderBackend/update', 'id' => $data->id]) : $data->name;
+                    return isset($data->client) ? CHtml::link($data->client->getFullName(), ['/order/clientBackend/view', 'id' => $data->user_id]) : $data->name;
                 },
                 'htmlOptions' => ['width' => '400px'],
             ],
@@ -105,14 +105,8 @@ $this->widget(
                 'name'   => 'delivery_id',
                 'header' => Yii::t('OrderModule.order', 'Delivery'),
                 'filter' => CHtml::listData(Delivery::model()->findAll(), 'id', 'name'),
-                'value'  => function($data){
+                'value'  => function(Order $data){
                     return $data->delivery->name;
-                }
-            ],
-            [
-                'name' => 'delivery_price',
-                'value' => function($data){
-                    return Yii::app()->getNumberFormatter()->formatCurrency($data->delivery_price, Yii::app()->getModule('store')->currency);
                 }
             ],
             [

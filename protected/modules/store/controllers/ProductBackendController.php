@@ -33,10 +33,10 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
                     'status',
                     'in_stock',
                     'price',
-                    'discount',
                     'discount_price',
                     'sku',
-                    'type_id'
+                    'type_id',
+                    'quantity'
                 ]
             ],
             'sortable' => [
@@ -111,7 +111,7 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
 
                 Yii::app()->getUser()->setFlash(
                     yupe\widgets\YFlashMessages::SUCCESS_MESSAGE,
-                    Yii::t('StoreModule.store', 'Record was added!')
+                    Yii::t('StoreModule.store', 'Record was created!')
                 );
 
                 $this->redirect(
@@ -256,7 +256,7 @@ class ProductBackendController extends yupe\components\controllers\BackControlle
         $model = Product::model()->with('images')->findByPk($id);
 
         if ($model === null) {
-            throw new CHttpException(404, Yii::t('StoreModule.store', 'Page was not found!'));
+            throw new CHttpException(404, Yii::t('StoreModule.store', 'Page not found!'));
         }
 
         return $model;

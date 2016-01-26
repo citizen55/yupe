@@ -10,7 +10,7 @@ Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/store
 
 $this->breadcrumbs = array_merge(
     [Yii::t("StoreModule.store", 'Catalog') => ['/store/product/index']],
-    $product->mainCategory ? $product->mainCategory->getBreadcrumbs(true) : [],
+    $product->category ? $product->category->getBreadcrumbs(true) : [],
     [CHtml::encode($product->name)]
 );
 ?>
@@ -20,7 +20,7 @@ $this->breadcrumbs = array_merge(
             <div class="product-gallery js-product-gallery">
                 <div class="product-gallery__body">
                     <div data-product-image class="product-gallery__img-wrap">
-                        <img src="<?= $product->getImageUrl(); ?>" class="product-gallery__main-img">
+                        <img src="<?= StoreImage::product($product); ?>" class="product-gallery__main-img">
                     </div>
                     <?php if ($product->isSpecial()): ?>
                         <div class="product-gallery__label">
@@ -31,7 +31,7 @@ $this->breadcrumbs = array_merge(
                     <?php endif; ?>
                 </div>
                 <div class="product-gallery__nav">
-                    <a href="<?= $product->getImageUrl(); ?>" rel="group" data-product-thumbnail
+                    <a href="<?= StoreImage::product($product); ?>" rel="group" data-product-thumbnail
                        class="product-gallery__nav-item">
                         <img src="<?= $product->getImageUrl(60, 60, false); ?>" alt=""
                              class="product-gallery__nav-img">
@@ -49,19 +49,6 @@ $this->breadcrumbs = array_merge(
         <div class="product-description__entry grid-module-6">
             <div class="entry">
                 <div class="entry__toolbar">
-                    <div class="entry__toolbar-left">
-                        <div class="entry__toolbar-item">
-                            <div data-rate='4' class="rating">
-                                <div class="rating__label">4.2</div>
-                                <div class="rating__corner">
-                                    <div class="rating__triangle"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="entry__toolbar-item"><a href="javascript:void(0);" class="reviews-link">6
-                                отзывов</a>
-                        </div>
-                    </div>
                     <div class="entry__toolbar-right">
                         <?php if(Yii::app()->hasModule('favorite')):?>
                             <?php $this->widget('application.modules.favorite.widgets.FavoriteControl', ['product' => $product, 'view' => '_in-product']);?>
@@ -99,7 +86,7 @@ $this->breadcrumbs = array_merge(
                                     <div class="entry__variant-value">
                                         <?=
                                         CHtml::dropDownList('ProductVariant[]', null, CHtml::listData($variantsGroup, 'id', 'optionValue'), [
-                                            'empty' => '',
+                                            'empty' => '--выберите--',
                                             'class' => 'js-select2 entry__variant-value-select noborder',
                                             'options' => $product->getVariantsOptions()
                                         ]); ?>
@@ -113,7 +100,10 @@ $this->breadcrumbs = array_merge(
                             <input type="hidden" id="base-price"
                                    value="<?= round($product->getResultPrice(), 2); ?>"/>
                             <span id="result-price"><?= round($product->getResultPrice(), 2); ?></span>
-                            <span class="ruble"> <?= Yii::t("StoreModule.store", "RUB"); ?></span>
+                            <span class="ruble"> <?= Yii::t("StoreModule.store", Yii::app()->getModule('store')->currency); ?></span>
+                            <?php if ($product->hasDiscount()): ?>
+                                <div class="product-price product-price_old"><?= round($product->getBasePrice(), 2) ?><span class="ruble"> <?= Yii::t("StoreModule.store", Yii::app()->getModule('store')->currency); ?></span></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php if (Yii::app()->hasModule('order')): ?>
@@ -136,7 +126,7 @@ $this->breadcrumbs = array_merge(
                             <span id="product-result-price"><?= round($product->getResultPrice(), 2); ?></span> x
                             <span id="product-quantity">1</span> =
                             <span id="product-total-price"><?= round($product->getResultPrice(), 2); ?></span>
-                            <span class="ruble"> <?= Yii::t("StoreModule.store", "RUB"); ?></span></div>
+                            <span class="ruble"> <?= Yii::t("StoreModule.store", Yii::app()->getModule('store')->currency); ?></span></div>
                     <?php endif; ?>
                 </form>
             </div>
@@ -184,12 +174,14 @@ $this->breadcrumbs = array_merge(
                             <dl class="product-spec-item">
                                 <dt class="product-spec-item__name">
                                     <span class="product-spec-item__name-inner">
-                                        <?= Yii::t("StoreModule.producer", "Producer"); ?>
+                                        <?= Yii::t("StoreModule.store", "Producer"); ?>
                                     </span>
                                 </dt>
                                 <dd class="product-spec-item__value">
                                     <span class="product-spec-item__value-inner">
-                                        <?= CHtml::encode($product->getProducerName()); ?>
+                                        <?php if($product->getProducerName()):?>
+                                            <?= CHtml::link($product->getProducerName(), ['/store/producer/view', 'slug' => $product->producer->slug]);?>
+                                        <?php endif;?>
                                     </span>
                                 </dd>
                             </dl>

@@ -25,7 +25,7 @@ class YupeModule extends WebModule
     /**
      *
      */
-    const VERSION = '0.9.9';
+    const VERSION = '1.0';
 
     /**
      * @var
@@ -526,7 +526,8 @@ class YupeModule extends WebModule
                         'linkOptions' => [
                             'class'  => 'flushAction',
                             'method' => 'assetsFlush',
-                        ]
+                        ],
+                        'visible' => !Yii::app()->getAssetManager()->linkAssets
                     ],
                     [
                         'icon'        => 'fa fa-fw fa-trash-o',
@@ -535,7 +536,8 @@ class YupeModule extends WebModule
                         'linkOptions' => [
                             'class'  => 'flushAction',
                             'method' => 'cacheAssetsFlush',
-                        ]
+                        ],
+                        'visible' => !Yii::app()->getAssetManager()->linkAssets
                     ],
                 ]
             ],
@@ -619,7 +621,7 @@ class YupeModule extends WebModule
      **/
     public function getUrl()
     {
-        return Yii::t('YupeModule.yupe', 'http://yupe-project.ru');
+        return Yii::t('YupeModule.yupe', 'http://yupe.ru');
     }
 
     /**
@@ -815,7 +817,7 @@ class YupeModule extends WebModule
                 $text,
                 ['alt' => CHtml::encode($text)]
             ),
-            'http://yupe-project.ru?from=pb',
+            'http://yupe.ru?from=pb',
             [
                 'title' => CHtml::encode($text),
                 'target'=> '_blank'

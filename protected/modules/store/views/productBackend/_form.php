@@ -5,11 +5,11 @@
  * @var $form \yupe\widgets\ActiveForm
  */
 ?>
-<?php Yii::app()->getClientScript()->registerCssFile($this->getModule()->getAssetsUrl() . '/css/store-backend.css'); ?>
+<?php Yii::app()->getClientScript()->registerCssFile($this->getModule()->getAssetsUrl().'/css/store-backend.css'); ?>
 
 <ul class="nav nav-tabs">
     <li class="active"><a href="#common" data-toggle="tab"><?= Yii::t("StoreModule.store", "Common"); ?></a></li>
-    <li><a href="#attributes" data-toggle="tab"><?= Yii::t("StoreModule.attr", "Attributes"); ?></a></li>
+    <li><a href="#attributes" data-toggle="tab"><?= Yii::t("StoreModule.store", "Attributes"); ?></a></li>
     <li><a href="#images" data-toggle="tab"><?= Yii::t("StoreModule.store", "Images"); ?></a></li>
     <li><a href="#variants" data-toggle="tab"><?= Yii::t("StoreModule.store", "Variants"); ?></a></li>
     <li><a href="#stock" data-toggle="tab"><?= Yii::t("StoreModule.store", "Stock"); ?></a></li>
@@ -68,7 +68,7 @@ $form = $this->beginWidget(
                     'category_id',
                     [
                         'widgetOptions' => [
-                            'data' => StoreCategory::model()->getFormattedList(),
+                            'data' => StoreCategoryHelper::formattedList(),
                             'htmlOptions' => [
                                 'empty' => '---',
                                 'encode' => false,
@@ -119,7 +119,8 @@ $form = $this->beginWidget(
                 <div class="panel-group">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a class="panel-title collapsed" data-toggle="collapse" data-parent="#accordion_price" href="#collapse_price">
+                            <a class="panel-title collapsed" data-toggle="collapse" data-parent="#accordion_price"
+                               href="#collapse_price">
                                 <?= Yii::t("StoreModule.store", 'Additional price'); ?>
                             </a>
                         </div>
@@ -152,7 +153,7 @@ $form = $this->beginWidget(
                         'store.widgets.CategoryTreeWidget',
                         [
                             'selectedCategories' => $model->getCategoriesId(),
-                            'id' => 'category-tree'
+                            'id' => 'category-tree',
                         ]
                     ); ?>
                 </div>
@@ -161,20 +162,23 @@ $form = $this->beginWidget(
 
         <div class='row'>
             <div class="col-sm-7">
-                <?php
-                echo CHtml::image(
-                    !$model->getIsNewRecord() && $model->image ? $model->getImageUrl() : '#',
+                <?=
+                CHtml::image(
+                    !$model->getIsNewRecord() && $model->image ? $model->getImageUrl(200, 200, true) : '#',
                     $model->name,
                     [
                         'class' => 'preview-image img-thumbnail',
-                        'style' => !$model->getIsNewRecord() && $model->image ? '' : 'display:none'
+                        'style' => !$model->getIsNewRecord() && $model->image ? '' : 'display:none',
                     ]
                 ); ?>
 
-                <?php if (!$model->isNewRecord && $model->image): ?>
+                <?php if (!$model->getIsNewRecord() && $model->image): ?>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="delete-file"> <?= Yii::t('YupeModule.yupe', 'Delete the file') ?>
+                            <input type="checkbox" name="delete-file"> <?= Yii::t(
+                                'YupeModule.yupe',
+                                'Delete the file'
+                            ) ?>
                         </label>
                     </div>
                 <?php endif; ?>
@@ -300,11 +304,11 @@ $form = $this->beginWidget(
                             <label for=""><?= Yii::t("StoreModule.store", "File"); ?></label>
                             <input type="file" class="image-file"/>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-7">
                             <label for=""><?= Yii::t("StoreModule.store", "Title"); ?></label>
                             <input type="text" class="image-title form-control"/>
                         </div>
-                        <div class="col-sm-1" style="padding-top: 24px">
+                        <div class="col-sm-2" style="padding-top: 24px">
                             <button class="button-delete-image btn btn-default" type="button"><i
                                     class="fa fa-fw fa-trash-o"></i></button>
                         </div>
@@ -346,13 +350,16 @@ $form = $this->beginWidget(
                                 'encode' => false,
                                 'id' => 'product-type',
                             ],
-                        ]
+                        ],
                     ]
                 ); ?>
             </div>
         </div>
         <div id="attributes-panel">
-            <?php $this->renderPartial('_attribute_form', ['groups' => $model->getAttributeGroups(), 'model' => $model]); ?>
+            <?php $this->renderPartial(
+                '_attribute_form',
+                ['groups' => $model->getAttributeGroups(), 'model' => $model]
+            ); ?>
         </div>
     </div>
 
@@ -377,7 +384,7 @@ $form = $this->beginWidget(
     <div class="tab-pane" id="variants">
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label class="control-label" for=""><?= Yii::t("StoreModule.attr", "Attribute"); ?></label>
+                <label class="control-label" for=""><?= Yii::t("StoreModule.store", "Attribute"); ?></label>
 
                 <div class="form-inline">
                     <div class="form-group">
@@ -394,20 +401,20 @@ $form = $this->beginWidget(
                     <div class="variant-template variant">
                         <table>
                             <thead>
-                                <tr>
-                                    <td><?= Yii::t("StoreModule.attr", "Attribute"); ?></td>
-                                    <td><?= Yii::t("StoreModule.store", "Value"); ?></td>
-                                    <td><?= Yii::t("StoreModule.store", "Price type"); ?></td>
-                                    <td><?= Yii::t("StoreModule.store", "Price"); ?></td>
-                                    <td><?= Yii::t("StoreModule.store", "SKU"); ?></td>
-                                    <td><?= Yii::t("StoreModule.store", "Order"); ?></td>
-                                    <td></td>
-                                </tr>
+                            <tr>
+                                <td><?= Yii::t("StoreModule.store", "Attribute"); ?></td>
+                                <td><?= Yii::t("StoreModule.store", "Value"); ?></td>
+                                <td><?= Yii::t("StoreModule.store", "Price type"); ?></td>
+                                <td><?= Yii::t("StoreModule.store", "Price"); ?></td>
+                                <td><?= Yii::t("StoreModule.store", "SKU"); ?></td>
+                                <td><?= Yii::t("StoreModule.store", "Order"); ?></td>
+                                <td></td>
+                            </tr>
                             </thead>
                             <tbody id="product-variants">
-                                <?php foreach ((array)$model->variants as $variant): ?>
-                                    <?php $this->renderPartial('_variant_row', ['variant' => $variant]); ?>
-                                <?php endforeach; ?>
+                            <?php foreach ((array)$model->variants as $variant): ?>
+                                <?php $this->renderPartial('_variant_row', ['variant' => $variant]); ?>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -420,7 +427,7 @@ $form = $this->beginWidget(
         <?php if ($model->getIsNewRecord()): ?>
             <?= Yii::t("StoreModule.store", "First you need to save the product."); ?>
         <?php else: ?>
-            <?= $this->renderPartial('_link_form', ['product' => $model, 'searchModel' => $searchModel]);?>
+            <?= $this->renderPartial('_link_form', ['product' => $model, 'searchModel' => $searchModel]); ?>
         <?php endif; ?>
     </div>
 </div>
@@ -500,7 +507,7 @@ $form = $this->beginWidget(
             $(this).closest('tr').remove();
         });
 
-        $('#product-type').on('change',function () {
+        $('#product-type').on('change', function () {
             var typeId = $(this).val();
             if (typeId) {
                 $('#attributes-panel').load('<?= Yii::app()->createUrl('/store/productBackend/typeAttributesForm');?>/' + typeId);
@@ -512,7 +519,7 @@ $form = $this->beginWidget(
             }
         });
 
-        $('#button-add-image').on('click',function () {
+        $('#button-add-image').on('click', function () {
             var newImage = $("#product-images .image-template").clone().removeClass('image-template').removeClass('hidden');
             newImage.appendTo("#product-images");
             newImage.find(".image-file").attr('name', 'ProductImage[][name]');

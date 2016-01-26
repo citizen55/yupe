@@ -10,7 +10,7 @@ class StoreModule extends WebModule
     /**
      *
      */
-    const VERSION = '0.9.9';
+    const VERSION = '1.0';
 
     /**
      * @var
@@ -106,6 +106,7 @@ class StoreModule extends WebModule
     {
         return [
             'uploadPath',
+            'defaultImage',
             'editor' => Yii::app()->getModule('yupe')->editors,
             'itemsPerPage',
             'phone',
@@ -219,70 +220,70 @@ class StoreModule extends WebModule
                         ],
                     ],
                     [
-                        'icon' => 'fa fa-fw fa-list-alt',
-                        'label' => Yii::t('StoreModule.type', 'Types'),
-                        'url' => ['/store/typeBackend/index'],
-                        'items' => [
-                            [
-                                'icon' => 'fa fa-fw fa-list-alt',
-                                'label' => Yii::t('StoreModule.type', 'Types list'),
-                                'url' => ['/store/typeBackend/index'],
-                            ],
-                            [
-                                'icon' => 'fa fa-fw fa-plus-square',
-                                'label' => Yii::t('StoreModule.type', 'Create type'),
-                                'url' => ['/store/typeBackend/create'],
-                            ],
-                        ],
-                    ],
-                    [
-                        'icon' => 'fa fa-fw fa-pencil-square-o',
-                        'label' => Yii::t('StoreModule.attr', 'Attributes'),
-                        'url' => ['/store/attributeBackend/index'],
-                        'items' => [
-                            [
-                                'icon' => 'fa fa-fw fa-list-alt',
-                                'label' => Yii::t('StoreModule.attr', 'Attributes list'),
-                                'url' => ['/store/attributeBackend/index'],
-                            ],
-                            [
-                                'icon' => 'fa fa-fw fa-plus-square',
-                                'label' => Yii::t('StoreModule.attr', 'Create attribute'),
-                                'url' => ['/store/attributeBackend/create'],
-                            ],
-                        ],
-                    ],
-                    [
                         'icon' => 'fa fa-fw fa-folder-open',
-                        'label' => Yii::t('StoreModule.category', 'Categories'),
+                        'label' => Yii::t('StoreModule.store', 'Categories'),
                         'url' => ['/store/categoryBackend/index'],
                         'items' => [
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
-                                'label' => Yii::t('StoreModule.category', 'Categories list'),
+                                'label' => Yii::t('StoreModule.store', 'Categories list'),
                                 'url' => ['/store/categoryBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
-                                'label' => Yii::t('StoreModule.category', 'Create category'),
+                                'label' => Yii::t('StoreModule.store', 'Create category'),
                                 'url' => ['/store/categoryBackend/create'],
                             ],
                         ],
                     ],
                     [
                         'icon' => 'fa fa-fw fa-plane',
-                        'label' => Yii::t('StoreModule.producer', 'Producers'),
+                        'label' => Yii::t('StoreModule.store', 'Producers'),
                         'url' => ['/store/producerBackend/index'],
                         'items' => [
                             [
                                 'icon' => 'fa fa-fw fa-list-alt',
-                                'label' => Yii::t('StoreModule.producer', 'Producers list'),
+                                'label' => Yii::t('StoreModule.store', 'Producers list'),
                                 'url' => ['/store/producerBackend/index'],
                             ],
                             [
                                 'icon' => 'fa fa-fw fa-plus-square',
-                                'label' => Yii::t('StoreModule.producer', 'Create producer'),
+                                'label' => Yii::t('StoreModule.store', 'Create producer'),
                                 'url' => ['/store/producerBackend/create'],
+                            ],
+                        ],
+                    ],
+                    [
+                        'icon' => 'fa fa-fw fa-pencil-square-o',
+                        'label' => Yii::t('StoreModule.store', 'Attributes'),
+                        'url' => ['/store/attributeBackend/index'],
+                        'items' => [
+                            [
+                                'icon' => 'fa fa-fw fa-list-alt',
+                                'label' => Yii::t('StoreModule.store', 'Attributes list'),
+                                'url' => ['/store/attributeBackend/index'],
+                            ],
+                            [
+                                'icon' => 'fa fa-fw fa-plus-square',
+                                'label' => Yii::t('StoreModule.store', 'Create attribute'),
+                                'url' => ['/store/attributeBackend/create'],
+                            ],
+                        ],
+                    ],
+                    [
+                        'icon' => 'fa fa-fw fa-list-alt',
+                        'label' => Yii::t('StoreModule.store', 'Types'),
+                        'url' => ['/store/typeBackend/index'],
+                        'items' => [
+                            [
+                                'icon' => 'fa fa-fw fa-list-alt',
+                                'label' => Yii::t('StoreModule.store', 'Types list'),
+                                'url' => ['/store/typeBackend/index'],
+                            ],
+                            [
+                                'icon' => 'fa fa-fw fa-plus-square',
+                                'label' => Yii::t('StoreModule.store', 'Create type'),
+                                'url' => ['/store/typeBackend/create'],
                             ],
                         ],
                     ],
@@ -328,7 +329,7 @@ class StoreModule extends WebModule
      */
     public function getDescription()
     {
-        return Yii::t('StoreModule.store', 'Store module');
+        return Yii::t('StoreModule.store', 'Store');
     }
 
     /**
@@ -352,7 +353,7 @@ class StoreModule extends WebModule
      */
     public function getUrl()
     {
-        return 'http://yupe-project.ru';
+        return 'http://yupe.ru';
     }
 
     /**
@@ -393,96 +394,96 @@ class StoreModule extends WebModule
                     [
                         'type' => AuthItem::TYPE_TASK,
                         'name' => 'Store.AttributeBackend.Management',
-                        'description' => Yii::t('StoreModule.attr', 'Manage product attributes'),
+                        'description' => Yii::t('StoreModule.store', 'Manage product attributes'),
                         'items' => [
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.AttributeBackend.Index',
-                                'description' => Yii::t('StoreModule.attr', 'View attribute list'),
+                                'description' => Yii::t('StoreModule.store', 'View attribute list'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.AttributeBackend.Create',
-                                'description' => Yii::t('StoreModule.attr', 'Create attribute'),
+                                'description' => Yii::t('StoreModule.store', 'Create attribute'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.AttributeBackend.Update',
-                                'description' => Yii::t('StoreModule.attr', 'Update attribute'),
+                                'description' => Yii::t('StoreModule.store', 'Update attribute'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.AttributeBackend.View',
-                                'description' => Yii::t('StoreModule.attr', 'View attribute'),
+                                'description' => Yii::t('StoreModule.store', 'View attribute'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.AttributeBackend.Delete',
-                                'description' => Yii::t('StoreModule.attr', 'Delete attribute'),
+                                'description' => Yii::t('StoreModule.store', 'Delete attribute'),
                             ],
                         ],
                     ],
                     [
                         'type' => AuthItem::TYPE_TASK,
                         'name' => 'Store.CategoryBackend.Management',
-                        'description' => Yii::t('StoreModule.category', 'Manage product categories'),
+                        'description' => Yii::t('StoreModule.store', 'Manage product categories'),
                         'items' => [
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.CategoryBackend.Index',
-                                'description' => Yii::t('StoreModule.category', 'List of categories'),
+                                'description' => Yii::t('StoreModule.store', 'List of categories'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.CategoryBackend.Create',
-                                'description' => Yii::t('StoreModule.category', 'Create category'),
+                                'description' => Yii::t('StoreModule.store', 'Create category'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.CategoryBackend.Update',
-                                'description' => Yii::t('StoreModule.category', 'Update category'),
+                                'description' => Yii::t('StoreModule.store', 'Update category'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.CategoryBackend.View',
-                                'description' => Yii::t('StoreModule.category', 'View category'),
+                                'description' => Yii::t('StoreModule.store', 'View category'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.CategoryBackend.Delete',
-                                'description' => Yii::t('StoreModule.category', 'Delete category'),
+                                'description' => Yii::t('StoreModule.store', 'Delete category'),
                             ],
                         ],
                     ],
                     [
                         'type' => AuthItem::TYPE_TASK,
                         'name' => 'Store.ProducerBackend.Management',
-                        'description' => Yii::t('StoreModule.producer', 'Manage producers'),
+                        'description' => Yii::t('StoreModule.store', 'Manage producers'),
                         'items' => [
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.ProducerBackend.Index',
-                                'description' => Yii::t('StoreModule.producer', 'View producer list'),
+                                'description' => Yii::t('StoreModule.store', 'View producer list'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.ProducerBackend.Create',
-                                'description' => Yii::t('StoreModule.producer', 'Create producer'),
+                                'description' => Yii::t('StoreModule.store', 'Create producer'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.ProducerBackend.Update',
-                                'description' => Yii::t('StoreModule.producer', 'Update producer'),
+                                'description' => Yii::t('StoreModule.store', 'Update producer'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.ProducerBackend.View',
-                                'description' => Yii::t('StoreModule.producer', 'View producer'),
+                                'description' => Yii::t('StoreModule.store', 'View producer'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.ProducerBackend.Delete',
-                                'description' => Yii::t('StoreModule.producer', 'Delete producer'),
+                                'description' => Yii::t('StoreModule.store', 'Delete producer'),
                             ],
                         ],
                     ],
@@ -521,32 +522,32 @@ class StoreModule extends WebModule
                     [
                         'type' => AuthItem::TYPE_TASK,
                         'name' => 'Store.TypeBackend.Management',
-                        'description' => Yii::t('StoreModule.type', 'Manage product types'),
+                        'description' => Yii::t('StoreModule.store', 'Manage product types'),
                         'items' => [
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.TypeBackend.Index',
-                                'description' => Yii::t('StoreModule.type', 'Types list'),
+                                'description' => Yii::t('StoreModule.store', 'Types list'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.TypeBackend.Create',
-                                'description' => Yii::t('StoreModule.type', 'Types list'),
+                                'description' => Yii::t('StoreModule.store', 'Types list'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.TypeBackend.Update',
-                                'description' => Yii::t('StoreModule.type', 'Update type'),
+                                'description' => Yii::t('StoreModule.store', 'Update type'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.TypeBackend.View',
-                                'description' => Yii::t('StoreModule.type', 'View type'),
+                                'description' => Yii::t('StoreModule.store', 'View type'),
                             ],
                             [
                                 'type' => AuthItem::TYPE_OPERATION,
                                 'name' => 'Store.TypeBackend.Delete',
-                                'description' => Yii::t('StoreModule.type', 'Delete type'),
+                                'description' => Yii::t('StoreModule.store', 'Delete type'),
                             ],
                         ],
                     ],

@@ -107,7 +107,7 @@ class DeliveryModule extends WebModule
      */
     public function getUrl()
     {
-        return 'http://yupe-project.ru';
+        return 'http://yupe.ru';
     }
 
     /**
@@ -115,7 +115,7 @@ class DeliveryModule extends WebModule
      */
     public function getIcon()
     {
-        return 'fa fa-fw fa-plane';
+        return 'fa fa-fw fa-car';
     }
 
     /**

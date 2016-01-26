@@ -2,7 +2,7 @@
 
 /* @var $product Product */
 
-$this->pageTitle = $product->getMetaTitle();
+$this->title = $product->getMetaTitle();
 $this->description = $product->getMetaDescription();
 $this->keywords = $product->getMetaKeywords();
 
@@ -14,7 +14,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getTheme()->getAss
 
 $this->breadcrumbs = array_merge(
     [Yii::t("StoreModule.store", 'Catalog') => ['/store/product/index']],
-    $product->mainCategory ? $product->mainCategory->getBreadcrumbs(true) : [],
+    $product->category ? $product->category->getBreadcrumbs(true) : [],
     [CHtml::encode($product->name)]
 );
 ?>
@@ -31,7 +31,7 @@ $this->breadcrumbs = array_merge(
                     <div class="col-sm-4">
                         <div class="thumbnails">
                             <div class="image-preview">
-                                <img src="<?= $product->getImageUrl(); ?>" alt="" class="" id="main-image">
+                                <img src="<?= StoreImage::product($product); ?>" alt="<?= CHtml::encode($product->name); ?>" class="" id="main-image">
                             </div>
                             <div class="row">
                                 <div class="col-xs-4 col-md-4">
@@ -192,7 +192,7 @@ $this->breadcrumbs = array_merge(
             <div class="tab-pane" id="attributes">
                 <table>
                     <tr>
-                        <td><b><?= Yii::t("StoreModule.producer", "Producer"); ?>:</b></td>
+                        <td><b><?= Yii::t("StoreModule.store", "Producer"); ?>:</b></td>
                         <td><?= CHtml::encode($product->getProducerName()); ?></td>
                     </tr>
                     <tr>

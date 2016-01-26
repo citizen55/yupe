@@ -25,8 +25,8 @@
             [
                 '{twitter}' => CHtml::link('twitter', 'http://twitter.com/yupecms', ['target' => '_blank']),
                 '{link}'    => CHtml::link(
-                        'http://yupe-project.ru',
-                        'http://yupe-project.ru?from=install',
+                        'http://yupe.ru',
+                        'http://yupe.ru?from=install',
                         ['target' => '_blank']
                     ),
                 '{forum}'   => CHtml::link(
@@ -44,7 +44,7 @@
                 [
                     '{link}' => CHtml::link(
                             Yii::t('InstallModule.install', 'our forum'),
-                            'http://yupe.ru/talk/viewforum.php?id=10',
+                            'http://talk.yupe.ru/viewforum.php?id=10',
                             ['target' => '_blank']
                         )
                 ]

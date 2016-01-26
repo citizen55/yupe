@@ -19,7 +19,8 @@ return [
             'applicationModuleName' => 'yupe',
 			//'applicationModuleName' => 'multistore',
             'migrationSubPath' => 'install.migrations',
-            'connectionID'=>'db',
+            'connectionID' => 'db',
+            'templateFile' => 'application.modules.yupe.migrations.migration-template',
         ],
     ],
     'import' => [

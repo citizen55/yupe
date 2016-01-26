@@ -117,7 +117,7 @@ $(document).ready(function () {
         var quantity = parseInt(quantityElement.text()) + 1;
         quantityElement.text(quantity);
         $('#product-quantity-input').val(quantity);
-        $('#product-total-price').text(parseInt($('#result-price').text()) * quantity);
+        $('#product-total-price').text(parseFloat($('#result-price').text()) * quantity);
     });
 
     $('.product-quantity-decrease').on('click', function () {
@@ -126,7 +126,7 @@ $(document).ready(function () {
             --quantity;
             quantityElement.text(quantity);
             $('#product-quantity-input').val(quantity);
-            $('#product-total-price').text(parseInt($('#result-price').text()) * quantity);
+            $('#product-total-price').text(parseFloat($('#result-price').text()) * quantity);
         }
     });
 
@@ -134,13 +134,13 @@ $(document).ready(function () {
         var el = $(this);
         quantity = parseInt(el.val());
 
-        if (quantity <= 0) {
+        if (quantity <= 0 || isNaN(quantity)) {
             quantity = 1;
         }
 
         el.val(quantity);
         quantityElement.text(quantity);
-        $('#product-total-price').text(parseInt($('#result-price').text()) * quantity);
+        $('#product-total-price').text(parseFloat($('#result-price').text()) * quantity);
     });
 
     $('#add-product-to-cart').on('click', function (e) {
@@ -223,7 +223,7 @@ $(document).ready(function () {
         var quantity = parseInt(el.find('.position-count').val());
         var productId = el.find('.position-id').val();
 
-        if (quantity <= 0) {
+        if (quantity <= 0 || isNaN(quantity)) {
             quantity = 1;
             el.find('.position-count').val(quantity);
         }

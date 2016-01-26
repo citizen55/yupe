@@ -24,7 +24,7 @@ $this->breadcrumbs = [Yii::t("StoreModule.store", "Catalog") => ['/store/product
 </div>
 
 <div class="row">
-    <?php $this->widget('application.modules.store.widgets.SearchProductWidget', ['query' => $searchForm->q, 'category' => $searchForm->category]); ?>
+    <?php $this->widget('application.modules.store.widgets.SearchProductWidget'); ?>
 </div>
 <div class="row">
     <form id="store-filter" name="store-filter">
@@ -35,7 +35,7 @@ $this->breadcrumbs = [Yii::t("StoreModule.store", "Catalog") => ['/store/product
                 </div>
             <?php endif;?>
             <div>
-                <?php $this->widget('application.modules.store.widgets.filters.ProducerFilterWidget'); ?>
+                <?php $this->widget('application.modules.store.widgets.filters.ProducerFilterWidget', ['limit' => 30]); ?>
             </div>
             <div>
                 <?php $this->widget('application.modules.store.widgets.filters.FilterBlockWidget', ['attributes' => '*']); ?>

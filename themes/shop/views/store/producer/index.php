@@ -5,20 +5,19 @@
 
 $this->breadcrumbs = [
     Yii::t("StoreModule.store", 'Catalog') => ['/store/product/index'],
-    Yii::t('StoreModule.producer', 'Producers list')
+    Yii::t('StoreModule.store', 'Producers list')
 ];
 
 ?>
 <div class="main__title grid">
     <h1 class="h2">
-        <?= Yii::t('StoreModule.producer', 'Producers list'); ?>
+        <?= Yii::t('StoreModule.store', 'Producers list'); ?>
     </h1>
 </div>
 
 <div class="main__catalog grid">
     <div class="cols">
-        <div class="col grid-module-2"></div>
-        <div class="col grid-module-9">
+        <div class="col grid-module-12">
             <?php $this->widget('zii.widgets.CListView', [
                 'dataProvider' => $brands,
                 'itemView' => '_item',

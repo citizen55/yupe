@@ -77,9 +77,9 @@ $this->breadcrumbs = [
                                          class="cart-item__img"/>
                                 </div>
                                 <div class="cart-item__content grid-module-4">
-                                    <?php if ($position->getProductModel()->getMainCategoryId()): ?>
+                                    <?php if ($position->getProductModel()->getCategoryId()): ?>
                                         <div class="cart-item__category"><?= $position->getProductModel(
-                                            )->mainCategory->name ?></div>
+                                            )->category->name ?></div>
                                     <?php endif; ?>
                                     <div class="cart-item__title">
                                         <a href="<?= $productUrl; ?>" class="cart-item__link"><?= CHtml::encode(
@@ -94,7 +94,7 @@ $this->breadcrumbs = [
                             </div>
                             <div class="cart-item__price">
                                 <span class="position-price"><?= $position->getPrice(); ?></span>
-                                <span class="ruble"> <?= Yii::t("CartModule.cart", "RUB"); ?></span>
+                                <span class="ruble"> <?= Yii::t("CartModule.cart", Yii::app()->getModule('store')->currency); ?></span>
                             </div>
                             <div class="cart-item__quantity">
                                 <span data-min-value='1' data-max-value='99' class="spinput js-spinput">
@@ -111,7 +111,7 @@ $this->breadcrumbs = [
                             </div>
                             <div class="cart-item__summ">
                                 <span class="position-sum-price"><?= $position->getSumPrice(); ?></span>
-                                <span class="ruble"> <?= Yii::t("CartModule.cart", "RUB"); ?></span>
+                                <span class="ruble"> <?= Yii::t("CartModule.cart", Yii::app()->getModule('store')->currency); ?></span>
 
                                 <div class="cart-item__action">
                                     <a class="js-cart__delete cart-delete-product"
@@ -126,35 +126,37 @@ $this->breadcrumbs = [
             </div>
             <?php if (Yii::app()->hasModule('coupon')): ?>
                 <div class="order-box__coupon">
-                    <div class="coupon-box"><span class="coupon-box__label"><?= Yii::t(
-                                "CartModule.cart",
-                                "Coupons"
-                            ); ?></span>
+                    <div class="coupon-box">
+                        <span class="coupon-box__label">
+                            <?= Yii::t("CartModule.cart", "Coupons"); ?>
+                        </span>
                         <input id="coupon-code" class="input coupon-box__input">
                         <button class="btn btn_primary coupon-box__button" type="button"
                                 id="add-coupon-code"><?= Yii::t("CartModule.cart", "Add coupon"); ?></button>
-                        <?php foreach ($coupons as $coupon): ?>
-                            <div class="fast-order__inputs coupon">
-                                <span class="label alert alert-info" title="<?= $coupon->name; ?>">
-                                    <?= $coupon->name; ?>
-                                    <button type="button" class="btn btn_primary close"
-                                            data-dismiss="alert">&times;</button>
-                                    <?= CHtml::hiddenField(
-                                        "Order[couponCodes][{$coupon->code}]",
-                                        $coupon->code,
-                                        [
-                                            'class' => 'coupon-input',
-                                            'data-code' => $coupon->code,
-                                            'data-name' => $coupon->name,
-                                            'data-value' => $coupon->value,
-                                            'data-type' => $coupon->type,
-                                            'data-min-order-price' => $coupon->min_order_price,
-                                            'data-free-shipping' => $coupon->free_shipping,
-                                        ]
-                                    ); ?>
-                                </span>
-                            </div>
-                        <?php endforeach; ?>
+                        <div class="row fast-order__inputs">
+                            <?php foreach ($coupons as $coupon): ?>
+                                <div class="coupon">
+                                    <span class="label" title="<?= $coupon->name; ?>">
+                                        <?= $coupon->name; ?>
+                                        <button type="button" class="btn btn_primary close"
+                                                data-dismiss="alert">&times;</button>
+                                        <?= CHtml::hiddenField(
+                                            "Order[couponCodes][{$coupon->code}]",
+                                            $coupon->code,
+                                            [
+                                                'class' => 'coupon-input',
+                                                'data-code' => $coupon->code,
+                                                'data-name' => $coupon->name,
+                                                'data-value' => $coupon->value,
+                                                'data-type' => $coupon->type,
+                                                'data-min-order-price' => $coupon->min_order_price,
+                                                'data-free-shipping' => $coupon->free_shipping,
+                                            ]
+                                        ); ?>
+                                    </span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             <?php endif; ?>
@@ -186,7 +188,7 @@ $this->breadcrumbs = [
                                                             <?= $delivery->name; ?>
                                                             - <?= $delivery->price; ?> <?= Yii::t(
                                                                 "CartModule.cart",
-                                                                "RUB"
+                                                                Yii::app()->getModule('store')->currency
                                                             ); ?>
                                                         </span>
                                                     </div>
@@ -357,11 +359,11 @@ $this->breadcrumbs = [
 
             <div class="order-box__bottom">
                 <div class="cart-box__subtotal">
-                    Итого: &nbsp;<span id="cart-total-product-count"><?= Yii::app()->cart->getCount(); ?></span>&nbsp;
-                    товар(а)
+                    Итого: &nbsp;<span id="cart-total-product-count"><?= Yii::app()->cart->getItemsCount(); ?></span>&nbsp;
+                    товар(ов)
                     на сумму &nbsp;<span id="cart-full-cost-with-shipping">0</span><span class="ruble"> <?= Yii::t(
                             "CartModule.cart",
-                            "RUB"
+                            Yii::app()->getModule('store')->currency
                         ); ?></span>
                 </div>
                 <div class="cart-box__order-button">

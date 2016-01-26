@@ -2,7 +2,7 @@
 /**
  * @var CActiveForm $form
  */
-$this->title = [Yii::t('FeedbackModule.feedback', 'Contacts'), Yii::app()->getModule('yupe')->siteName];
+$this->title = Yii::t('FeedbackModule.feedback', 'Contacts');
 $this->breadcrumbs = [Yii::t('FeedbackModule.feedback', 'Contacts')];
 Yii::import('application.modules.feedback.FeedbackModule');
 Yii::import('application.modules.install.InstallModule');
@@ -11,7 +11,10 @@ Yii::import('application.modules.install.InstallModule');
     <h1 class="h2"><?= Yii::t('FeedbackModule.feedback', 'Contacts'); ?></h1>
 </div>
 <div class="main__catalog grid">
-    <div class="errorSummary grid-module-6 fast-order__inputs">
+    <div class="grid-module-6">
+        <?php $this->widget('yupe\widgets\YFlashMessages'); ?>
+    </div>
+    <div class="alert alert-warning grid-module-6 fast-order__inputs">
         <p>
             <?= Yii::t('FeedbackModule.feedback',
                 'If you have any questions, proposals or want to report an error'
@@ -46,7 +49,7 @@ Yii::import('application.modules.install.InstallModule');
             'id' => 'feedback-form',
         ]); ?>
 
-        <p class="errorSummary fast-order__inputs">
+        <p class="alert alert-info fast-order__inputs">
             <?= Yii::t('FeedbackModule.feedback', 'Fields with'); ?> <span
                 class="required">*</span> <?= Yii::t('FeedbackModule.feedback', 'are required.'); ?>
         </p>

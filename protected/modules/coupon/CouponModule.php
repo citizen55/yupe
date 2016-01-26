@@ -10,7 +10,7 @@ class CouponModule extends WebModule
     /**
      *
      */
-    const VERSION = '0.9.9';
+    const VERSION = '1.0';
 
     public function getDependencies()
     {
@@ -34,12 +34,12 @@ class CouponModule extends WebModule
             [
                 'icon' => 'fa fa-fw fa-list-alt',
                 'label' => Yii::t('CouponModule.coupon', 'Coupons list'),
-                'url' => ['/coupon/couponBackend/index']
+                'url' => ['/coupon/couponBackend/index'],
             ],
             [
                 'icon' => 'fa fa-fw fa-plus-square',
                 'label' => Yii::t('CouponModule.coupon', 'Create coupon'),
-                'url' => ['/coupon/couponBackend/create']
+                'url' => ['/coupon/couponBackend/create'],
             ],
 
         ];
@@ -106,7 +106,7 @@ class CouponModule extends WebModule
      */
     public function getUrl()
     {
-        return 'http://yupe-project.ru';
+        return 'http://yupe.ru';
     }
 
 
